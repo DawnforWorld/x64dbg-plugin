@@ -28,6 +28,9 @@ set(ADBG_IQVW64E_PATH "" CACHE PATH "iqvw64e.sys 原始二进制（构建时自�
 set(ADBG_GEN_DIR "${CMAKE_BINARY_DIR}/gen" CACHE INTERNAL "生成头文件目录")
 set(ADBG_ABI_HEADER "${CMAKE_CURRENT_SOURCE_DIR}/include/adbg_abi.h")
 
+# 控制面客户端：双架构都要（dp32 只有它）
+add_subdirectory(client)
+
 if(ADBG_BUILD_DRIVER)
   add_subdirectory(driver)
   add_subdirectory(loader)

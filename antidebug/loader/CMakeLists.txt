@@ -22,15 +22,13 @@ add_library(antidebug_loader STATIC
 
 target_include_directories(antidebug_loader PUBLIC
   "${_src_root}"
+  "${_src_root}/kdm/include"
   "${CMAKE_CURRENT_SOURCE_DIR}/../include"
+  "${CMAKE_CURRENT_SOURCE_DIR}/../client"
   "${ADBG_GEN_DIR}")  # 生成头优先：遮住 kdm/ 里的 iqvw64e 空桩
 
 target_compile_features(antidebug_loader PUBLIC cxx_std_17)
 
-# 池标签改成自己的指纹（kdmapper 上游写死 'BwtE'，是已知的映射器特征）
-target_compile_definitions(antidebug_loader PRIVATE ADBG_POOL_TAG=0x67626441)  # 'Adbg'
-# 输出静音开关：插件里不想让 kdmapper 往 stdout 打日志
-target_compile_definitions(antidebug_loader PUBLIC ADBG_KDM_QUIET)
 
 # ---- 生成头 1：iqvw64e 字节（两种来源二选一，都没有就跳过，用空桩） ----
 set(_iqvw64e_gen "${ADBG_GEN_DIR}/intel_driver_resource.hpp")
@@ -78,4 +76,13 @@ add_custom_command(
 add_custom_target(adbg_gen_driver_header DEPENDS "${_driver_gen}")
 add_dependencies(antidebug_loader adbg_gen_driver_header)
 
-target_link_libraries(antidebug_loader PUBLIC advapi32)
+target_link_libraries(antidebug_loader PUBLIC antidebug_client)
+
+if(MSVC)
+  target_compile_options(antidebug_loader PRIVATE /utf-8)
+endif()
+
+# 静态 CRT：与 antictl/插件一致，产物不依赖目标机的运行库
+set_property(TARGET antidebug_loader PROPERTY
+  MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+

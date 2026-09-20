@@ -11,7 +11,6 @@ set(_sdk "${CMAKE_CURRENT_SOURCE_DIR}/third_party/pluginsdk")
 set(_sources
   "${_src_root}/pluginmain.cpp"
   "${_src_root}/plugin.cpp"
-  "${_src_root}/driver_client.cpp"
   "${_src_root}/ui/settings_dialog.cpp"
   "${_src_root}/ui/settings_dialog.rc")
 
@@ -35,6 +34,8 @@ target_compile_definitions(antidebug_plugin PRIVATE
   WIN32_LEAN_AND_MEAN
   NOMINMAX
   _CRT_SECURE_NO_WARNINGS)
+
+target_link_libraries(antidebug_plugin PRIVATE antidebug_client)
 
 if(CMAKE_SIZEOF_VOID_P EQUAL 8)
   target_compile_definitions(antidebug_plugin PRIVATE ADBG_HAS_LOADER=1)
