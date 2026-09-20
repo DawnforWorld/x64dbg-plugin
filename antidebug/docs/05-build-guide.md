@@ -54,6 +54,29 @@ cmake --preset win-x64-release --fresh \
 `iqvw64e.sys` 原始文件从哪来：它随 kdmapper 项目流通（如 TheCruZ/kdmapper
 仓库），Intel 官方网卡驱动包里也有。自行确认你有权下载和使用。
 
+### 3.1 杀毒软件会删你的产物（重要）
+
+给构建提供真实 iqvw64e 字节后，**内嵌这些字节的 EXE（antictl.exe）会被
+Windows 安全防护在生成后几秒内自动删除**（实测 2026-09-20：同内容改名
+的副本也一起被删，是按内容识别；Defender 操作日志里没有对应检测记录）。
+`.dp64` 插件是 DLL、同样内嵌字节，实测未被删；被定点清理的只有 EXE。
+
+处理方式（改系统安全策略，按 AGENTS.md 规则由你本人手动做）：
+管理员 PowerShell 给构建目录加排除项后重编 antictl：
+
+```powershell
+Add-MpPreference -ExclusionPath "D:\project\x64dbg-plugin\build"
+```
+
+或者不用 antictl，改用 dp64 插件菜单里的"加载并启动"（插件内嵌了完整
+加载链，能自己装驱动，见 docs/07）。
+
+另一个相关的坑（已修复，2026-09-20）：`loader/CMakeLists.txt` 的 include
+目录顺序曾经把生成头目录排在最后，导致 `kdm/include` 里的空桩先被命中、
+真实字节永远编不进去（症状：配置了 -D 参数、日志也显示复制了资源头，
+但二进制大小不变、行为仍是"资源未生成"）。现在生成头目录固定排第一，
+顺序别改回去。
+
 ## 4. 产物清单
 
 | 产物 | 路径（Release 配置） | 用途 |

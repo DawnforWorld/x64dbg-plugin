@@ -46,6 +46,20 @@
 - 构建未提供 iqvw64e 字节（空桩）：`antictl load` 会在第一步给出明确提示——
   这是设计内的防呆，不是缺陷。
 
+### 2026-09-20（补：真实 iqvw64e 字节链路打通）
+
+- 用 `-DADBG_IQVW64E_HPP=D:/project/vtdbg/build/gen/intel_driver_resource.hpp`
+  重新配置并干净重编 x64：dp64（457KB）与 antictl.exe（437KB）均**确认内嵌
+  真实 iqvw64e 字节**（脚本比对字节序列命中），dumpbin 复核导出完好。
+- **修复一个隐藏 bug**：`loader/CMakeLists.txt` 的 include 顺序曾把生成头目录
+  排在最后，空桩永远先被命中——配置了真实字节也编不进去（症状：二进制大小
+  不变）。已把 `ADBG_GEN_DIR` 固定排第一，勿回退。
+- **发现环境问题（未解决，待用户操作）**：内嵌 iqvw64e 字节的 **EXE 会被
+  Windows 安全防护在生成后数秒内删除**（antictl.exe 反复消失，改名副本同删；
+  Defender 操作日志无检测记录）。dp32/dp64/sys 未被删。处理见 docs/05 §3.1
+  （给 build 目录加杀软排除项，需用户管理员手动执行），或改用插件菜单
+  "加载并启动"。
+
 ## 变更日志
 
 - 2026-09-20 M0a：设计定稿，文档全套落地。
@@ -63,3 +77,5 @@
   ini 持久化（自动隐藏 + 技术开关记忆）。
 - 2026-09-20 M4：全量 Release 编译验证通过；dumpbin 导出核验；文档回填
   （03 DriverBase 说明、02/05 补 client 库）。
+- 2026-09-20 修复：loader include 顺序 bug（生成头被空桩遮蔽，真实
+  iqvw64e 字节编不进去）+ 记录杀软删 EXE 产物的环境问题（docs/05 §3.1）。
