@@ -60,18 +60,21 @@
 
 ```cpp
 // driver/src/engine/hook_engine.hpp
-struct SyscallHookContext {
-    void**       system_call_function;  // 指向"本次系统调用要跳去的内核函数地址"
-    unsigned long index;                // 系统调用号（参考用）
+// 回调签名：与 InfinityHook 引擎原生回调一致（参数直接透传）
+using SyscallHookCallback = void(__fastcall*)(unsigned long index,
+                                              void** system_call_function);
+// system_call_function 指向"本次系统调用要跳去的内核函数地址"，
+// 回调里把它改写成处理函数地址即完成一次拦截。
+//
+// 说明：内核镜像无 CRT（docs/02 §6），接口用"函数指针结构体"而不是
+// C++ 虚类——效果等价于 vtable，但不需要构造函数，全局可零初始化。
+struct AD_HOOK_ENGINE {
+    NTSTATUS (*Start)(const SyscallHookCallback callback);
+    NTSTATUS (*Stop)();                 // 必须完整还原所有改过的指针
+    BOOL      (*IsRunning)();
 };
-using SyscallHookCallback = void(__fastcall*)(const SyscallHookContext&);
-
-class IHookEngine {
-public:
-    virtual NTSTATUS Start(const SyscallHookCallback callback) = 0;
-    virtual NTSTATUS Stop() = 0;        // 必须完整还原所有改过的指针
-    virtual bool     IsRunning() const = 0;
-};
+extern const AD_HOOK_ENGINE InfinityHookProEngine;  // 默认实现
+// 换引擎 = 写一个新的 const AD_HOOK_ENGINE，一行换挂
 ```
 
 默认实现 `InfinityHookProEngine`（移植自参考克隆）：改 CKCL 日志会话的取时钟指针，
@@ -190,6 +193,7 @@ DRIVER_STOP(IOCTL)
 | 控制层 | `driver/src/control/` | 设备 + IOCTL 分发 + 密钥校验 |
 | 加载 SPI | `loader/src/spi/` | 三个接口头文件 |
 | kdm 移植 | `loader/src/kdm/` | intel_driver / service / kdmapper / utils 移植 |
+| 控制客户端 | `client/` | antidebug_client 库（双架构）：IOCTL 封装 + 密钥注册表交接 |
 | 加载编排 | `loader/src/driver_loader.*` | 高层 Load/Unload/IsLoaded + 密钥交接 |
 | 命令行 | `app/antictl/` | load/unload/status/hide/unhide/tech/smoke |
 | 插件 | `plugin/src/` | pluginmain（导出）+ plugin（菜单/命令/事件）+ driver_client + ui/ |

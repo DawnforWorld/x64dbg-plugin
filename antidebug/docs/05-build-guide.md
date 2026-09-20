@@ -63,6 +63,7 @@ cmake --preset win-x64-release --fresh \
 | antidebug.dp64 | `build/win-x64-release/antidebug/plugin/Release/` | x64dbg 插件 |
 | antidebug.dp32 | `build/win-x86-release/antidebug/plugin/Release/` | x32dbg 插件 |
 | antidebug_loader.lib | `build/win-x64-release/antidebug/loader/Release/` | 加载器静态库（内部产物） |
+| antidebug_client.lib | `build/win-*/antidebug/client/Release/` | 控制面客户端库（内部产物，双架构） |
 | 生成的头文件 | `build/*/gen/` | 驱动字节头、iqvw64e 字节头（不入库） |
 
 ## 5. 部署
