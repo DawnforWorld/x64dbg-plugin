@@ -32,3 +32,6 @@ iqvw64e*.hpp
 # 系统杂物
 Thumbs.db
 desktop.ini
+
+# ZCode 会话工具目录
+.zcode/
