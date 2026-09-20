@@ -1,0 +1,50 @@
+{
+  "version": 6,
+  "cmakeMinimumRequired": { "major": 3, "minor": 24, "patch": 0 },
+  "configurePresets": [
+    {
+      "name": "base",
+      "hidden": true,
+      "generator": "Visual Studio 17 2022",
+      "cacheVariables": {
+        "CMAKE_CONFIGURATION_TYPES": "Debug;Release"
+      }
+    },
+    {
+      "name": "win-x64-debug",
+      "displayName": "x64 全量 Debug（驱动 + 加载器 + antictl + dp64）",
+      "inherits": "base",
+      "architecture": "x64",
+      "binaryDir": "${sourceDir}/build/win-x64-debug"
+    },
+    {
+      "name": "win-x64-release",
+      "displayName": "x64 全量 Release",
+      "inherits": "base",
+      "architecture": "x64",
+      "binaryDir": "${sourceDir}/build/win-x64-release"
+    },
+    {
+      "name": "win-x86-debug",
+      "displayName": "x86 仅插件 Debug（dp32）",
+      "inherits": "base",
+      "architecture": "Win32",
+      "binaryDir": "${sourceDir}/build/win-x86-debug",
+      "cacheVariables": { "ADBG_BUILD_DRIVER": "OFF" }
+    },
+    {
+      "name": "win-x86-release",
+      "displayName": "x86 仅插件 Release（dp32）",
+      "inherits": "base",
+      "architecture": "Win32",
+      "binaryDir": "${sourceDir}/build/win-x86-release",
+      "cacheVariables": { "ADBG_BUILD_DRIVER": "OFF" }
+    }
+  ],
+  "buildPresets": [
+    { "name": "win-x64-debug", "configurePreset": "win-x64-debug" },
+    { "name": "win-x64-release", "configurePreset": "win-x64-release" },
+    { "name": "win-x86-debug", "configurePreset": "win-x86-debug" },
+    { "name": "win-x86-release", "configurePreset": "win-x86-release" }
+  ]
+}
