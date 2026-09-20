@@ -16,7 +16,7 @@ add_library(antidebug_driver MODULE
   src/platform/utils.cpp
   # 引擎层：InfinityHookPro 移植 + HDE64 反汇编引擎
   src/engine/infinity_hook_pro.cpp
-  src/engine/hde/hde64.cpp
+  src/platform/hde/hde64.cpp
   # 框架层：技术注册表 + 策略
   src/framework/registry.cpp
   src/framework/policy.cpp
