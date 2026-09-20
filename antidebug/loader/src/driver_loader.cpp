@@ -124,6 +124,13 @@ DriverLoadResult DriverLoad() {
             result.error += "（易受攻击驱动阻止列表未关闭，见 docs/06 §2）";
         } else if (status == STATUS_ACCESS_DENIED) {
             result.error += "（需要管理员权限，或有杀软拦截）";
+        } else if (status == STATUS_PRIVILEGE_NOT_HELD) {
+            result.error += "（SeDebugPrivilege 取不到：x64dbg 进程不是真正的"
+                            "管理员令牌，或\"调试程序\"权限被组策略/杀软剥走；"
+                            "任务管理器→详细信息→Elevated 列可核实）";
+        } else if (status == STATUS_REGISTRY_IO_FAILED) {
+            result.error += "（写不进 HKLM\\Services 注册表：x64dbg 进程不是"
+                            "管理员令牌？任务管理器-详细信息-Elevated 列可核实）";
         }
         return result;
     }
