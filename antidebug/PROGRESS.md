@@ -79,3 +79,7 @@
   （03 DriverBase 说明、02/05 补 client 库）。
 - 2026-09-20 修复：loader include 顺序 bug（生成头被空桩遮蔽，真实
   iqvw64e 字节编不进去）+ 记录杀软删 EXE 产物的环境问题（docs/05 §3.1）。
+- 2026-09-20 补：实机首测报 0xC0000061（SeDebugPrivilege 取不到，vtdbg
+  手法在此硬失败）。按用户要求保持与 vtdbg 逐字一致、不改判断逻辑；
+  在 antidebug 自己的 driver_loader 层给该状态码和注册表写失败补了
+  可操作的中文提示（docs/05 §7）。

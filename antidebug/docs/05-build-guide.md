@@ -129,5 +129,6 @@ loader 和 antictl 编译时 include。所以"构建 x64 全量"会自动完成�
 | 找不到 WDK | FindWDK 只认 `C:\Program Files (x86)\Windows Kits\10` 等固定位置；确认装的是 WDK10 且有 `Lib/<版本>/km/x64` |
 | 链接报 `unresolved external __security_cookie` 之类 | 有人给驱动目标开了 /GS 或加了 CRT 依赖，回看配方 |
 | antictl 报"iqvw64e resource not generated" | 正常防呆：按 §3 提供 -D 参数重新配置 |
+| 加载报 `iqvw64e 装载失败: 0xC0000061` | `STATUS_PRIVILEGE_NOT_HELD`：vtdbg 手法加载前要取 SeDebugPrivilege，取到才继续。说明 x64dbg 进程令牌里没有这个权限——要么不是真管理员启动，要么"调试程序"用户权利被组策略/杀软剥走。核实办法：任务管理器→详细信息→加"Elevated（特权提升）"列，x64dbg.exe 应显示"是" |
 | x86 预试编了驱动 | 不会——`ADBG_BUILD_DRIVER` 在 x86 预设里是 OFF，只编插件 |
 | 想清掉重来 | 删 `build/` 目录，或加 `--fresh` |
