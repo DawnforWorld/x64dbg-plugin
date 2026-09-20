@@ -1,0 +1,34 @@
+# 构建产物
+build/
+build-*/
+out/
+*.log
+
+# Visual Studio
+.vs/
+*.vcxproj*
+*.sln
+*.user
+*.aps
+
+# 编译中间产物
+*.obj
+*.pdb
+*.ilk
+*.exp
+*.lib.tmp
+
+# 参考克隆：各自是独立的 git 仓库，不纳入本仓库管理
+# 来源见 README.md「参考项目」一节
+antidebug/InfinityHookPro/
+antidebug/TitanHide/
+
+# 秘密与二进制：iqvw64e.sys 的字节永远不入库（仅提交空桩）
+antidebug/loader/src/kdmapper/intel_driver_resource_real.hpp
+iqvw64e*.sys
+iqvw64e*.hpp
+*.sys.local
+
+# 系统杂物
+Thumbs.db
+desktop.ini
