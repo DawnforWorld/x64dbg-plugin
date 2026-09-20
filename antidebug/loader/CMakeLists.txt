@@ -21,11 +21,11 @@ add_library(antidebug_loader STATIC
   "${_src_root}/kdm/portable_executable.cpp")
 
 target_include_directories(antidebug_loader PUBLIC
+  "${ADBG_GEN_DIR}"  # 必须排第一：遮住 kdm/ 里的 iqvw64e 空桩（排后面空桩先命中，真实字节编不进去）
   "${_src_root}"
   "${_src_root}/kdm/include"
   "${CMAKE_CURRENT_SOURCE_DIR}/../include"
-  "${CMAKE_CURRENT_SOURCE_DIR}/../client"
-  "${ADBG_GEN_DIR}")  # 生成头优先：遮住 kdm/ 里的 iqvw64e 空桩
+  "${CMAKE_CURRENT_SOURCE_DIR}/../client")
 
 target_compile_features(antidebug_loader PUBLIC cxx_std_17)
 
