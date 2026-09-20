@@ -5,13 +5,15 @@
  *
  */
 
-#include "../headers.hpp"
+#include "hde64.h"
+#include <string.h>
 
 #if defined(_M_X64) || defined(__x86_64__)
 #pragma warning(push, 0)
 #pragma warning(disable: 4701 4706 26451)
 
 #include "hde64.h"
+#include <string.h>
 #include "table64.h"
 
 unsigned int hde64_disasm(const void* code, hde64s* hs)

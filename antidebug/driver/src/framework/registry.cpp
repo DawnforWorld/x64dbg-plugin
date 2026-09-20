@@ -1,9 +1,10 @@
 /* SPDX-License-Identifier: MIT */
 /* framework/registry.cpp —— 见同头文件。 */
+#include "common/nt_extra.hpp"  /* 必须最前：ntifs.h 要先于 ntddk.h */
+
 #include "framework/registry.hpp"
 
 #include "common/bss.hpp"
-#include "common/nt_extra.hpp"
 #include "framework/policy.hpp"
 #include "framework/technique.hpp"
 
@@ -19,8 +20,8 @@ NTSTATUS NTAPI AdbgHkNtSetContextThread(HANDLE, PCONTEXT);
 NTSTATUS NTAPI AdbgHkNtSystemDebugControl(ULONG, PVOID, ULONG, PVOID, ULONG, PULONG);
 NTSTATUS NTAPI AdbgHkNtDuplicateObject(HANDLE, HANDLE, HANDLE, PHANDLE, ACCESS_MASK, ULONG, ULONG);
 NTSTATUS NTAPI AdbgHkNtCreateThreadEx(PHANDLE, ACCESS_MASK, POBJECT_ATTRIBUTES, HANDLE,
-                                      PVOID, PVOID, ULONG, SIZE_T, SIZE_T, SIZE_T,
-                                      PVOID);
+                                      ADBG_USER_THREAD_START_ROUTINE, PVOID, ULONG, SIZE_T,
+                                      SIZE_T, SIZE_T, PADBG_PS_ATTRIBUTE_LIST);
 }  // extern "C"
 
 /* ---------------- 声明式注册表本体（★C，docs/02 §3） ---------------- */

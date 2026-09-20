@@ -2,6 +2,7 @@
 /* platform/utils.cpp —— 见同头文件。来源：InfinityHookPro utils.hpp 移植。 */
 #include "platform/utils.hpp"
 
+#include <intrin.h>
 #include <ntstrsafe.h>
 
 #include "platform/hde/hde64.h"

@@ -13,8 +13,9 @@
 extern "C" NTSTATUS NTAPI AdbgHkNtCreateThreadEx(
     PHANDLE ThreadHandle, ACCESS_MASK DesiredAccess,
     POBJECT_ATTRIBUTES ObjectAttributes, HANDLE ProcessHandle,
-    PVOID StartRoutine, PVOID Argument, ULONG CreateFlags, SIZE_T ZeroBits,
-    SIZE_T StackSize, SIZE_T MaximumStackSize, PVOID AttributeList) {
+    ADBG_USER_THREAD_START_ROUTINE StartRoutine, PVOID Argument, ULONG CreateFlags,
+    SIZE_T ZeroBits, SIZE_T StackSize, SIZE_T MaximumStackSize,
+    PADBG_PS_ATTRIBUTE_LIST AttributeList) {
     auto original = (ADBG_FN_NtCreateThreadEx)AdbgRegistryOriginal(
         kHookNtCreateThreadEx);
     KPROCESSOR_MODE previous_mode = ExGetPreviousMode();

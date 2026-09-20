@@ -10,9 +10,17 @@
 
 find_package(WDK REQUIRED)
 
+# Debug 配置默认带 /RTC1（运行时检查），其符号在 CRT 里——无 CRT 的
+# 手动映射驱动链接不过，去掉（Release 本来就没有）
+foreach(_cfg DEBUG RELWITHDEBINFO MINSIZEREL)
+  string(REPLACE "/RTC1" "" CMAKE_CXX_FLAGS_${_cfg} "${CMAKE_CXX_FLAGS_${_cfg}}")
+  string(REPLACE "/RTC1" "" CMAKE_C_FLAGS_${_cfg} "${CMAKE_C_FLAGS_${_cfg}}")
+endforeach()
+
 add_library(antidebug_driver MODULE
   src/entry.cpp
   # 平台层：OS 差异吸收（模块枚举/特征码/KVAS 影子解析）
+  src/common/kernel_compat.cpp
   src/platform/utils.cpp
   # 引擎层：InfinityHookPro 移植 + HDE64 反汇编引擎
   src/engine/infinity_hook_pro.cpp

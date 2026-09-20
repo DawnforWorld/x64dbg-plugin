@@ -73,8 +73,8 @@ ADBG_BSS_END
 /* ---------------- CKCL 会话控制 ---------------- */
 
 NTSTATUS NtTraceControlOp(ETWP_TRACE_TYPE type) {
-    CKCL_TRACE_PROPERTIES *prop =
-        (CKCL_TRACE_PROPERTIES *)ExAllocatePoolWithTag(NonPagedPool, PAGE_SIZE,
+    ADBG_CKCL_TRACE_PROPERTIES *prop =
+        (ADBG_CKCL_TRACE_PROPERTIES *)ExAllocatePoolWithTag(NonPagedPool, PAGE_SIZE,
                                                        kPoolTag);
     if (prop == nullptr)
         return STATUS_MEMORY_NOT_ALLOCATED;
@@ -99,9 +99,9 @@ NTSTATUS NtTraceControlOp(ETWP_TRACE_TYPE type) {
     prop->Props.BufferSize = sizeof(ULONG);
     prop->Props.MinimumBuffers = 2;
     prop->Props.MaximumBuffers = 2;
-    prop->Props.LogFileMode = EVENT_TRACE_BUFFERING_MODE;
+    prop->Props.LogFileMode = ADBG_EVENT_TRACE_BUFFERING_MODE;
     if (type == EtwpUpdateTrace)
-        prop->Props.EnableFlags = EVENT_TRACE_FLAG_SYSTEMCALL;
+        prop->Props.EnableFlags = ADBG_EVENT_TRACE_FLAG_SYSTEMCALL;
 
     ULONG length = 0;
     NTSTATUS status = NtTraceControl(type, prop, PAGE_SIZE, prop, PAGE_SIZE,
@@ -178,7 +178,7 @@ ULONG64 FakeGetReferenceTimeUsingTscPage() {
 /* ---------------- 检测线程：处理指针被系统改回去的情况 ---------------- */
 
 void DetectThreadRoutine(PVOID);
-bool ResolveAndAttach();
+bool ResolveAndAttach(adbg_engine::SyscallHookCallback callback);
 
 void DetectThreadRoutine(PVOID) {
     while (g_detect_thread_status != 0) {
@@ -189,10 +189,10 @@ void DetectThreadRoutine(PVOID) {
             if (MmIsAddressValid(g_get_cpu_clock) &&
                 MmIsAddressValid(*g_get_cpu_clock)) {
                 if ((ULONG64)(ULONG_PTR)OnCpuClock != (ULONG64)*g_get_cpu_clock) {
-                    ResolveAndAttach();
+                    ResolveAndAttach(nullptr);
                 }
             } else {
-                ResolveAndAttach();
+                ResolveAndAttach(nullptr);
             }
         }
         /* 现代路径需要持续调用 KeQueryPerformanceCounter 保持
@@ -511,7 +511,9 @@ NTSTATUS DetachHooks() {
 
 /* ---------------- 接口包装（AD_HOOK_ENGINE 的实现体） ---------------- */
 
-bool ResolveAndAttach() {
+bool ResolveAndAttach(adbg_engine::SyscallHookCallback callback) {
+    if (callback != nullptr)
+        g_callback = callback;
     if (!ResolveAll(g_callback))
         return false;
     return AttachHooks();
@@ -531,7 +533,7 @@ bool LastStartWasInitFailure() {
 NTSTATUS EngineStart(const SyscallHookCallback callback) {
     if (InterlockedCompareExchange(&adbg_inf::g_running, 1, 0) != 0)
         return STATUS_ALREADY_REGISTERED;
-    if (!adbg_inf::ResolveAndAttach()) {
+    if (!adbg_inf::ResolveAndAttach(callback)) {
         InterlockedExchange(&adbg_inf::g_running, 0);
         return STATUS_UNSUCCESSFUL;
     }

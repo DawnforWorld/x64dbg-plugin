@@ -5,6 +5,7 @@
 
 #include <ntddk.h>
 
+#include "adbg_abi.h"  /* uint32_t 与技术位定义 */
 #include "engine/hook_engine.hpp"
 
 extern "C" {

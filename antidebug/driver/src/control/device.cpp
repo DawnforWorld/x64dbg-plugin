@@ -1,10 +1,12 @@
 /* SPDX-License-Identifier: MIT */
 /* control/device.cpp —— 见同头文件。IOCTL 语义见 docs/03 §4-§6。 */
+#include "control/device.hpp"  /* ntddk 必须最先 */
+
 #define ADBG_DECLARE_TECH_NAMES
 #include "adbg_abi.h"
 #undef ADBG_DECLARE_TECH_NAMES
 
-#include "control/device.hpp"
+#include <wdmsec.h>  /* IoCreateDeviceSecure 的声明（需要 wdm 的类型先行） */
 
 #include "common/bss.hpp"
 #include "engine/hook_engine.hpp"

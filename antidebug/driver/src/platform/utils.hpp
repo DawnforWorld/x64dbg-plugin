@@ -9,6 +9,7 @@
 #define ADBG_PLATFORM_UTILS_H_
 
 #include <ntddk.h>
+#include <ntimage.h>
 #include <ntstatus.h>
 
 namespace adbg_plat {
