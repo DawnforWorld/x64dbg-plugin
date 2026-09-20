@@ -11,6 +11,7 @@
 #define ADBG_CONTROL_CLIENT_H_
 
 #include <windows.h>
+#include <winternl.h>  /* NTSTATUS */
 
 #include <cstdint>
 #include <string>

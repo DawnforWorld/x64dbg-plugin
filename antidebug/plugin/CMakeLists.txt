@@ -11,8 +11,7 @@ set(_sdk "${CMAKE_CURRENT_SOURCE_DIR}/third_party/pluginsdk")
 set(_sources
   "${_src_root}/pluginmain.cpp"
   "${_src_root}/plugin.cpp"
-  "${_src_root}/ui/settings_dialog.cpp"
-  "${_src_root}/ui/settings_dialog.rc")
+  "${_src_root}/ui/settings_dialog.cpp")
 
 add_library(antidebug_plugin SHARED ${_sources})
 
