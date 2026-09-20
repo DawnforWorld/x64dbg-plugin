@@ -2,11 +2,12 @@
 #
 # 两个架构各编一次（根 preset 控制）：x64 带完整加载器，x86 只带控制面
 # （docs/02 §6 决策：iqvw64e 手法仅 x64）。
-# pluginsdk 复制自 antidebug/TitanHide/TitanHide_x64dbg/pluginsdk（MIT/GPL，
-# 见 docs/06 §6——内部研究用途，不分发）。
+# 插件 SDK 用合集级共享副本：third_party/x64dbg-pluginsdk
+# （源自 x64dbg 项目，经 TitanHide 拷贝取得；所有插件共用，不再各自拷贝，
+# 许可注意事项见 docs/06 §6）
 
 set(_src_root "${CMAKE_CURRENT_SOURCE_DIR}/src")
-set(_sdk "${CMAKE_CURRENT_SOURCE_DIR}/third_party/pluginsdk")
+set(_sdk "${CMAKE_SOURCE_DIR}/third_party/x64dbg-pluginsdk")
 
 set(_sources
   "${_src_root}/pluginmain.cpp"

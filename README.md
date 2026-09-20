@@ -15,6 +15,7 @@ x64dbg-plugin/
 ├── AGENTS.md               # 给 AI 编程助手（和新人）看的工作规范
 ├── CONTRIBUTING.md         # 代码风格与提交规范
 ├── cmake/                  # 共享的构建辅助脚本（找 WDK、生成驱动字节头文件）
+├── third_party/            # 共享的第三方代码（x64dbg-pluginsdk 等）
 └── antidebug/              # 第一个插件：反反调试（详见其目录内 README）
 ```
 
@@ -44,12 +45,17 @@ cmake --build build/win-x86-release --config Release
 
 构建产物位置见 `antidebug/docs/05-build-guide.md`。
 
+## 共享的第三方代码
+
+`third_party/x64dbg-pluginsdk/` 是 x64dbg 插件 SDK 的共享副本（头文件 +
+x32/x64 导入库），**所有插件直接引用这一份**，不要各自再拷。
+
 ## 怎么新增第二个插件
 
 1. 新建目录，比如 `plugins2/`，里面放一个 `CMakeLists.txt` 和源码；
 2. 在根 `CMakeLists.txt` 末尾加一行 `add_subdirectory(plugins2)`；
 3. 插件目录里照抄 `antidebug/plugin/CMakeLists.txt` 的写法（输出 .dp64/.dp32、
-   链接 pluginsdk），把 `antidebug/plugin/third_party/pluginsdk` 复制或引用过去。
+   链接共享 SDK：把 `_sdk` 指向 `${CMAKE_SOURCE_DIR}/third_party/x64dbg-pluginsdk`）。
 
 ## 参考项目（本地克隆，不入本仓库）
 

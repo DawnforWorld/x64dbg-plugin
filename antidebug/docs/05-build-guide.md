@@ -81,6 +81,7 @@ cmake --preset win-x64-release --fresh \
 CMakePresets.json            4 个预设（x64/x86 × debug/release）
 cmake/FindWDK.cmake          找 Windows Kits（优先 10.0.19041.0）——自 vtdbg 移植
 cmake/BinToHeader.cmake      脚本模式：二进制 → C++ 字节数组头文件
+third_party/x64dbg-pluginsdk/ 共享插件 SDK（所有插件引用这一份）
 antidebug/CMakeLists.txt     插件级编排 + 选项（ADBG_BUILD_DRIVER 等）
 antidebug/driver/            antidebug.sys（vtdbg 同款链接配方，见下）
 antidebug/loader/            静态库（x64 only）
