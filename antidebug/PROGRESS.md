@@ -83,3 +83,8 @@
   手法在此硬失败）。按用户要求保持与 vtdbg 逐字一致、不改判断逻辑；
   在 antidebug 自己的 driver_loader 层给该状态码和注册表写失败补了
   可操作的中文提示（docs/05 §7）。
+- 2026-09-20 UI 重做：控制面板此前控件用缺省点阵字体、坐标写死像素，
+  高 DPI 下错位。现改为系统消息字体 + 按 DPI 缩放的统一布局引擎
+  （ComputePlacements），窗口可拖拽缩放（WM_SIZE/WM_DPICHANGED 重排）。
+  新增预览夹具 plugin/tools/ui_preview.cpp：不启动 x64dbg 渲染面板
+  出 PNG 自查布局（构建命令见文件头）。
